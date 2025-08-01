@@ -9,4 +9,4 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Workflow działa: $(date -u)"
+      - run: echo "Workflow działa!"
