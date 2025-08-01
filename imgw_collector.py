@@ -7,6 +7,7 @@ Created on Fri Aug  1 11:56:28 2025
 
 import requests
 import json
+import os
 from datetime import datetime
 
 URL = "https://danepubliczne.imgw.pl/api/data/meteo/"
