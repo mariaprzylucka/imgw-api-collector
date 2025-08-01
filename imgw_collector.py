@@ -12,6 +12,8 @@ from datetime import datetime
 URL = "https://danepubliczne.imgw.pl/api/data/meteo/"
 
 def get_data():
+    if not os.path.exists('data'):
+        os.makedirs('data')
     response = requests.get(URL, stream=True)
     
     if response.status_code == 200:
