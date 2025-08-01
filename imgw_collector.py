@@ -13,41 +13,39 @@ from datetime import datetime
 URL = "https://danepubliczne.imgw.pl/api/data/meteo/"
 
 def get_data():
-    if not os.path.exists('data'):
-        os.makedirs('data')
     response = requests.get(URL)
     
     if response.status_code == 200:
         data = response.json()
-        timestamp = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-        today = datetime.utcnow().strftime('%Y-%m-%d')
-        filename = f"data/imgw_data_{today}.json"
+        now = datetime.utcnow()
+        date_str = now.strftime('%Y-%m-%d')  # np. '2025-08-01'
+        timestamp_str = now.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-        # Dołącz znacznik czasu do danych
         entry = {
-            "timestamp": timestamp,
+            "timestamp": timestamp_str,
             "data": data
         }
 
-        # Jeśli plik istnieje, wczytaj i dołącz dane
+        # Upewnij się, że folder 'data' istnieje
+        os.makedirs("data", exist_ok=True)
+        filename = f"data/imgw_data_{date_str}.json"
+
+        # Jeśli plik istnieje, wczytaj go i dodaj dane
         if os.path.exists(filename):
             with open(filename, "r", encoding="utf-8") as f:
-                existing_data = json.load(f)
+                content = json.load(f)
         else:
-            existing_data = []
+            content = []
 
-        existing_data.append(entry)
+        content.append(entry)
 
-        # Zapisz zaktualizowaną listę
+        # Zapisz zaktualizowany plik
         with open(filename, "w", encoding="utf-8") as f:
-            json.dump(existing_data, f, ensure_ascii=False, indent=2)
+            json.dump(content, f, ensure_ascii=False, indent=2)
 
         print(f"Appended data to {filename}")
     else:
         print(f"Failed to fetch data. Status: {response.status_code}")
 
 if __name__ == "__main__":
-    # Upewnij się, że katalog data/ istnieje
-    if not os.path.exists('data'):
-        os.makedirs('data')
     get_data()
